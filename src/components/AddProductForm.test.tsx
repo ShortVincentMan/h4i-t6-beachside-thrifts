@@ -17,7 +17,7 @@ function completeForm() {
 }
 
 function submitForm() {
-  fireEvent.click(screen.getAllByRole("button", { name: "Add product", exact: true })[1]);
+  fireEvent.click(screen.getAllByRole("button", { name: "Add product" })[1]);
 }
 
 describe("AddProductForm", () => {
