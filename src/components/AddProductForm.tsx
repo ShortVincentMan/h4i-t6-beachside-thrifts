@@ -111,7 +111,7 @@ export default function AddProductForm({ onProductCreated }: AddProductFormProps
   };
 
   return (
-    <>
+    <div className="add-product-container">
       <button className="add-product-trigger" type="button" onClick={openForm}>
         Add product
       </button>
@@ -200,7 +200,7 @@ export default function AddProductForm({ onProductCreated }: AddProductFormProps
           </form>
         </section>
       )}
-    </>
+    </div>
   );
 }
 
