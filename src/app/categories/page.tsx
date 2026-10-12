@@ -2,12 +2,14 @@
 
 import CategoryCard from "@/components/CategoryCard";
 import "@/components/categoryCard.css";
+import { mockProducts } from "@/data/products";
+import { mergeProducts } from "@/lib/products";
 import type { Product } from "@/types/product";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import "./categoriesPage.css";
 
 export default function CategoriesPage() {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<Product[]>(mockProducts);
   const [loadStatus, setLoadStatus] = useState<"loading" | "ready" | "error">("loading");
   const [loadError, setLoadError] = useState<string | null>(null);
 
@@ -19,7 +21,7 @@ export default function CategoriesPage() {
       const response = await fetch("/api/products");
       if (!response.ok) throw new Error("Unable to load categories");
       const apiProducts = (await response.json()) as Product[];
-      setProducts(apiProducts);
+      setProducts((currentProducts) => mergeProducts(currentProducts, apiProducts));
       setLoadStatus("ready");
     } catch {
       setLoadError("Categories could not be loaded. Please try again.");
