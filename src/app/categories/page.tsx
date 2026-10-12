@@ -2,14 +2,14 @@
 
 import CategoryCard from "@/components/CategoryCard";
 import "@/components/categoryCard.css";
-import { mockProducts } from "@/data/products";
+// import { mockProducts } from "@/data/products";
 import { mergeProducts } from "@/lib/products";
 import type { Product } from "@/types/product";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import "./categoriesPage.css";
 
 export default function CategoriesPage() {
-  const [products, setProducts] = useState<Product[]>(mockProducts);
+  const [products, setProducts] = useState<Product[]>([]);
   const [loadStatus, setLoadStatus] = useState<"loading" | "ready" | "error">("loading");
   const [loadError, setLoadError] = useState<string | null>(null);
 

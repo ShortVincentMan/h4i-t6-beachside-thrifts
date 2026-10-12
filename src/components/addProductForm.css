@@ -1,7 +1,7 @@
 .add-product-trigger {
   position: fixed;
   right: 1.5rem;
-  bottom: 1.5rem;
+  bottom: 0.5rem;
   z-index: 10;
   border: 0;
   border-radius: 999px;
@@ -143,7 +143,7 @@
 @media (max-width: 600px) {
   .add-product-trigger {
     right: 1rem;
-    bottom: 1rem;
+    bottom: 0.5rem;
   }
 
   .add-product-dropdown {
