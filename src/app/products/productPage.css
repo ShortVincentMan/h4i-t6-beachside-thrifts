@@ -196,9 +196,8 @@
 }
 
 .products-page-header > .add-product-container {
-  position: absolute;
-  right: 1.75rem;
-  bottom: 1.5rem;
+  position: relative;
+  align-self: flex-end;
   z-index: 1;
 }
 
@@ -496,10 +495,5 @@
 
   .products-page__header {
     padding: 1.25rem 1rem;
-  }
-
-  .products-page-header > .add-product-container {
-    right: 1rem;
-    bottom: 1.25rem;
   }
 }
