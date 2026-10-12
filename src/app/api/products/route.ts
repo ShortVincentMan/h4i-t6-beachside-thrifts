@@ -15,6 +15,7 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+<<<<<<< HEAD
   try {
     await connectDB();
     const body = await request.json();
@@ -31,6 +32,50 @@ export async function POST(request: Request) {
       price,
       category,
       imageUrl,
+=======
+  let body: unknown;
+
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Request body must be valid JSON" }, { status: 400 });
+  }
+
+  try {
+    await connectDB();
+
+    if (!body || typeof body !== "object") {
+      return NextResponse.json({ error: "Product data must be an object" }, { status: 400 });
+    }
+
+    const { name, description, price, category, imageUrl, inStock } = body as Record<string, unknown>;
+
+    if (
+      typeof name !== "string" ||
+      !name.trim() ||
+      name.trim().length > 100 ||
+      typeof description !== "string" ||
+      !description.trim() ||
+      description.trim().length > 500 ||
+      typeof price !== "number" ||
+      !Number.isFinite(price) ||
+      price < 0 ||
+      typeof category !== "string" ||
+      !category.trim() ||
+      typeof imageUrl !== "string" ||
+      !isHttpUrl(imageUrl) ||
+      typeof inStock !== "boolean"
+    ) {
+      return NextResponse.json({ error: "Invalid product data" }, { status: 400 });
+    }
+
+    const newProduct = await Product.create({
+      name: name.trim(),
+      description: description.trim(),
+      price,
+      category: category.trim(),
+      imageUrl: imageUrl.trim(),
+>>>>>>> d7ff8f2ae99d23ec9cb7f8abaef4423994071978
       inStock,
     });
 
@@ -38,4 +83,16 @@ export async function POST(request: Request) {
   } catch (error) {
     return NextResponse.json({ error: "Failed to create product" }, { status: 500 });
   }
+<<<<<<< HEAD
+=======
+}
+
+function isHttpUrl(value: string) {
+  try {
+    const url = new URL(value);
+    return url.protocol === "http:" || url.protocol === "https:";
+  } catch {
+    return false;
+  }
+>>>>>>> d7ff8f2ae99d23ec9cb7f8abaef4423994071978
 }

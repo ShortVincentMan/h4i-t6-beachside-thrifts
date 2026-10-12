@@ -1,12 +1,13 @@
 "use client";
 
 import ProductCard from "@/components/ProductCard";
-import { mockProducts } from "@/data/products";
+import AddProductForm from "@/components/AddProductForm";
+import ProductsLoadingIndicator from "./ProductsLoadingIndicator";
+// import { mockProducts } from "@/data/products";
+import { mergeProducts } from "@/lib/products";
 import type { Product as ProductType } from "@/types/product";
 import { useEffect, useMemo, useRef, useState } from "react";
 require("./productPage.css");
-
-const products: ProductType[] = mockProducts;
 
 type ShapeSpec = {
   id: number;
@@ -18,6 +19,13 @@ type ShapeSpec = {
   imageUrl: string;
   clipPath: string;
 };
+
+type LoadStatus = "loading" | "ready" | "error";
+
+const HEADER_ANIM_DELAY = 720;
+
+// simulate products failing to load
+const TEST_FAIL = false;
 
 function getShapeCount(width: number) {
   if (width >= 1440) return 11;
@@ -46,7 +54,7 @@ function createClipPath(seed: number) {
   return `polygon(${points.join(", ")})`;
 }
 
-function createShapeSet(width: number) {
+function createShapeSet(width: number, products: ProductType[]) {
   const count = getShapeCount(width);
   const sourceProducts = products.length > 0 ? [...products] : [];
 
@@ -87,14 +95,44 @@ function createShapeSet(width: number) {
 }
 
 export default function ProductPage() {
+  const [products, setProducts] = useState<ProductType[]>([]);
+  const [productsError, setProductsError] = useState<string | null>(null);
+  const [loadStatus, setLoadStatus] = useState<LoadStatus>("loading");
+  const [loadAttempt, setLoadAttempt] = useState(0);
   const [viewportWidth, setViewportWidth] = useState<number>(0);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [shapes, setShapes] = useState<ShapeSpec[]>([]);
   const [leavingShapes, setLeavingShapes] = useState<ShapeSpec[]>([]);
   const [incomingShapes, setIncomingShapes] = useState<ShapeSpec[]>([]);
   const [waveId, setWaveId] = useState<number>(0);
   const [shapesUnlocked, setShapesUnlocked] = useState(false);
+  const [headerImpactComplete, setHeaderImpactComplete] = useState(false);
   const leaveTimeoutRef = useRef<number | null>(null);
   const currentShapesRef = useRef<ShapeSpec[]>(shapes);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    const loadProducts = async () => {
+      try {
+        if (TEST_FAIL) throw new Error("Product loading failure test");
+
+        const response = await fetch("/api/products", { signal: controller.signal });
+        if (!response.ok) throw new Error("Unable to load products");
+        const data = await response.json();
+        setProducts((currentProducts) => mergeProducts(currentProducts, data as ProductType[]));
+        setLoadStatus("ready");
+      } catch (error) {
+        if ((error as Error).name !== "AbortError") {
+          setProductsError("Products could not be loaded. Please refresh and try again.");
+          setLoadStatus("error");
+        }
+      }
+    };
+
+    loadProducts();
+    return () => controller.abort();
+  }, [loadAttempt]);
 
   useEffect(() => {
     const updateWidth = () => setViewportWidth(window.innerWidth);
@@ -114,11 +152,24 @@ export default function ProductPage() {
   }, []);
 
   useEffect(() => {
+    const category = new URLSearchParams(window.location.search).get("category")?.trim();
+    setSelectedCategory(category || null);
+  }, []);
+
+  useEffect(() => {
     const unlockTimer = window.setTimeout(() => {
       setShapesUnlocked(true);
     }, 500);
 
     return () => window.clearTimeout(unlockTimer);
+  }, []);
+
+  useEffect(() => {
+    const impactTimer = window.setTimeout(() => {
+      setHeaderImpactComplete(true);
+    }, HEADER_ANIM_DELAY);
+
+    return () => window.clearTimeout(impactTimer);
   }, []);
 
   useEffect(() => {
@@ -137,9 +188,9 @@ export default function ProductPage() {
       return;
     }
 
-    const initialWave = createShapeSet(stableWidth);
+    const initialWave = createShapeSet(stableWidth, products);
     setShapes(initialWave);
-  }, [shapesUnlocked, stableWidth]);
+  }, [products, shapesUnlocked, stableWidth]);
 
   useEffect(() => {
     if (!shapesUnlocked) {
@@ -151,7 +202,7 @@ export default function ProductPage() {
 
     const intervalId = window.setInterval(() => {
       const currentWave = currentShapesRef.current;
-      const nextShapes = createShapeSet(stableWidth);
+      const nextShapes = createShapeSet(stableWidth, products);
 
       setLeavingShapes(currentWave);
       setIncomingShapes(nextShapes);
@@ -174,20 +225,48 @@ export default function ProductPage() {
         window.clearTimeout(leaveTimeoutRef.current);
       }
     };
-  }, [shapesUnlocked, stableWidth]);
+  }, [products, shapesUnlocked, stableWidth]);
 
   const visibleShapes = shapesUnlocked ? (incomingShapes.length > 0 ? incomingShapes : shapes) : [];
+  const displayedProducts = selectedCategory
+    ? products.filter((product) => product.category.toLocaleLowerCase() === selectedCategory.toLocaleLowerCase())
+    : products;
+  const gridLoaded = loadStatus === "ready" && headerImpactComplete;
+  const gridWaiting = loadStatus !== "error" && !gridLoaded;
+
+  const retryLoading = () => {
+    setProductsError(null);
+    setLoadStatus("loading");
+    setLoadAttempt((attempt) => attempt + 1);
+  };
 
   return (
-    <main className="products-page">
-      <div className="products-page-inner">
-        <header className="products-page-header">
-          <div className="products-page-visuals" aria-hidden="true">
-            {shapesUnlocked &&
-              leavingShapes.map((shape, index) => (
+    <>
+      <main className="products-page">
+        <div className="products-page-inner">
+          <header className="products-page-header">
+            <div className="products-page-visuals" aria-hidden="true">
+              {shapesUnlocked &&
+                leavingShapes.map((shape, index) => (
+                  <div
+                    key={`out-${waveId}-${shape.id}-${index}`}
+                    className="products-page-image-shape products-page-image-shape--out"
+                    style={{
+                      left: `${shape.x}%`,
+                      top: `${shape.y}%`,
+                      width: `${shape.width}px`,
+                      height: `${shape.height}px`,
+                      backgroundImage: `url(${shape.imageUrl})`,
+                      clipPath: shape.clipPath,
+                      animationDelay: `${index * 0.06}s`,
+                    }}
+                  />
+                ))}
+
+              {visibleShapes.map((shape, index) => (
                 <div
-                  key={`out-${waveId}-${shape.id}-${index}`}
-                  className="products-page-image-shape products-page-image-shape--out"
+                  key={`in-${waveId}-${shape.id}-${index}`}
+                  className="products-page-image-shape products-page-image-shape--in"
                   style={{
                     left: `${shape.x}%`,
                     top: `${shape.y}%`,
@@ -199,40 +278,83 @@ export default function ProductPage() {
                   }}
                 />
               ))}
-
-            {visibleShapes.map((shape, index) => (
-              <div
-                key={`in-${waveId}-${shape.id}-${index}`}
-                className="products-page-image-shape products-page-image-shape--in"
-                style={{
-                  left: `${shape.x}%`,
-                  top: `${shape.y}%`,
-                  width: `${shape.width}px`,
-                  height: `${shape.height}px`,
-                  backgroundImage: `url(${shape.imageUrl})`,
-                  clipPath: shape.clipPath,
-                  animationDelay: `${index * 0.06}s`,
-                }}
-              />
-            ))}
-          </div>
-
-          <div className="products-page-eyebrow">consume consume consume</div>
-
-          <div className="products-page-title-row">
-            <div>
-              <h1 className="products-page-title">Products</h1>
-              <p className="products-page-subtitle">please buy our stuff</p>
             </div>
-          </div>
-        </header>
 
-        <section className="products-page-grid">
-          {products.map((product: ProductType) => (
-            <ProductCard key={product.id} {...product} />
-          ))}
-        </section>
-      </div>
-    </main>
+            <div className="products-page-header-top">
+              <div className="products-page-eyebrow">
+                {loadStatus === "error"
+                  ? "LOADING FAILED"
+                  : loadStatus === "loading"
+                    ? "Loading products..."
+                    : `${displayedProducts.length} offers found`}
+              </div>
+            </div>
+
+            <div className="products-page-title-row">
+              <div>
+                <h1 className="products-page-title">{selectedCategory ? `${selectedCategory} finds` : "Products"}</h1>
+                <p className="products-page-subtitle">
+                  {selectedCategory
+                    ? `A selection of ${selectedCategory.toLocaleLowerCase()} from our beachside shelves.`
+                    : "please buy our stuff"}
+                </p>
+                {selectedCategory && (
+                  <a className="products-page-clear-filter" href="/products">
+                    View all products
+                  </a>
+                )}
+              </div>
+            </div>
+
+            <AddProductForm
+              onProductCreated={(product) =>
+                setProducts((currentProducts) => mergeProducts(currentProducts, [product]))
+              }
+            />
+          </header>
+
+          <section className={`products-page-grid${gridLoaded ? " products-page-grid--loaded" : ""}`}>
+            {gridWaiting ? (
+              <ProductsLoadingIndicator />
+            ) : productsError ? (
+              <div className="products-page-load-error products-page-empty" role="alert">
+                <p>{productsError}</p>
+                <button className="products-page-retry" type="button" onClick={retryLoading}>
+                  Retry loading
+                </button>
+              </div>
+            ) : displayedProducts.length > 0 ? (
+              displayedProducts.map((product) => (
+                <ProductCard key={product._id ?? product.id ?? product.name} {...product} />
+              ))
+            ) : (
+              <p className="products-page-empty">
+                {selectedCategory
+                  ? "No products found in this category. Try browsing all products instead."
+                  : "No products have been added yet."}
+              </p>
+            )}
+          </section>
+        </div>
+      </main>
+      {/* {gridLoaded && (
+        <div className="products-page-wave" aria-hidden="true">
+          <svg
+            className="products-page-wave-layer products-page-wave-layer--back"
+            viewBox="0 0 2880 140"
+            preserveAspectRatio="none"
+          >
+            <path d="M0 65 C180 65 180 35 360 35 S540 65 720 65 S900 95 1080 95 S1260 65 1440 65 S1620 35 1800 35 S1980 65 2160 65 S2340 95 2520 95 S2700 65 2880 65 V140 H0 Z" />
+          </svg>
+          <svg
+            className="products-page-wave-layer products-page-wave-layer--front"
+            viewBox="0 0 2880 140"
+            preserveAspectRatio="none"
+          >
+            <path d="M0 85 C180 85 180 55 360 55 S540 85 720 85 S900 115 1080 115 S1260 85 1440 85 S1620 55 1800 55 S1980 85 2160 85 S2340 115 2520 115 S2700 85 2880 85 V140 H0 Z" />
+          </svg>
+        </div>
+      )} */}
+    </>
   );
 }
