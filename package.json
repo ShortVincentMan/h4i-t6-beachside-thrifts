@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "mongoose": "^8.24.4",
-    "next": "^14",
+    "next": "^16.4.0",
     "react": "^18",
     "react-dom": "^18"
   },
@@ -29,6 +29,7 @@
     "husky": "^9",
     "lint-staged": "^15",
     "prettier": "^3",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^5.0.4"
   }
 }
