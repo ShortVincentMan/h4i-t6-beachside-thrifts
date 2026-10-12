@@ -1,11 +1,5 @@
 import mongoose from "mongoose";
 
-const MONGODB_URI = process.env.MONGO_URI;
-
-if (!MONGODB_URI) {
-  throw new Error("Please define the MONGODB_URI environment variable inside .env.local");
-}
-
 // Cache the connection across hot reloads in development
 const globalWithMongoose = globalThis as typeof globalThis & {
   mongoose?: { conn: typeof mongoose | null; promise: Promise<typeof mongoose> | null };
@@ -19,6 +13,11 @@ if (!cached) {
 const connectionCache = cached;
 
 async function dbConnect() {
+  const mongoUri = process.env.MONGO_URI;
+  if (!mongoUri) {
+    throw new Error("MONGO_URI must be set before connecting to MongoDB");
+  }
+
   if (connectionCache.conn) {
     return connectionCache.conn;
   }
@@ -28,7 +27,7 @@ async function dbConnect() {
       bufferCommands: false,
     };
 
-    connectionCache.promise = mongoose.connect(MONGODB_URI!, opts).then((mongoose) => {
+    connectionCache.promise = mongoose.connect(mongoUri, opts).then((mongoose) => {
       return mongoose;
     });
   }
