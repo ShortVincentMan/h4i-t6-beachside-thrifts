@@ -3,7 +3,7 @@
 import Wave from "@/components/Wave";
 import Image from "next/image";
 import beachsideImage from "./assets/beachsideImg.png";
-import thriftImage from "./assets/THRIFTImg.png";
+import thriftImage from "./assets/THRIFTBlueImg.png";
 import { useState, useEffect } from "react";
 
 export default function Home() {

@@ -7,6 +7,7 @@ import { mergeProducts } from "@/lib/products";
 import type { Product } from "@/types/product";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import "./categoriesPage.css";
+import categoriesWriting from "../assets/categoriesWriting.png";
 
 export default function CategoriesPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -62,11 +63,14 @@ export default function CategoriesPage() {
     <main className="categories-page">
       <div className="categories-page-inner">
         <header className="categories-page-header">
-          <p className="categories-page-eyebrow">find your next favorite</p>
-          <h1 className="categories-page-title">Categories</h1>
-          <p className="categories-page-subtitle">
-            Browse our beachside finds by category and discover something new to love.
+          <p className="categories-page-eyebrow">
+            {categories.length > 0 ? `${categories.length} categories found` : "loading..."}
           </p>
+          {/* <h1 className="categories-page-title">Categories</h1> */}
+          <div className="categories-page-title">
+            <img src={categoriesWriting.src} alt="Categories" className="title-image-categories"></img>
+          </div>
+          <p className="categories-page-subtitle">Browse our beachside finds by category.</p>
         </header>
 
         {loadStatus === "loading" ? (

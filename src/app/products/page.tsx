@@ -8,6 +8,7 @@ import ProductsLoadingIndicator from "./ProductsLoadingIndicator";
 import { mergeProducts } from "@/lib/products";
 import type { Product as ProductType } from "@/types/product";
 import { useEffect, useMemo, useRef, useState } from "react";
+import productsWriting from "../assets/productsWriting.png";
 require("./productPage.css");
 
 type ShapeSpec = {
@@ -293,7 +294,13 @@ export default function ProductPage() {
 
             <div className="products-page-title-row">
               <div>
-                <h1 className="products-page-title">{selectedCategory ? `${selectedCategory} finds` : "Products"}</h1>
+                {selectedCategory ? (
+                  <h1 className="products-page-title">{`${selectedCategory}`}</h1>
+                ) : (
+                  <div className="products-page-title">
+                    <img src={productsWriting.src} alt="Products" className="title-image"></img>
+                  </div>
+                )}
                 <p className="products-page-subtitle">
                   {selectedCategory
                     ? `A selection of ${selectedCategory.toLocaleLowerCase()} from our beachside shelves.`

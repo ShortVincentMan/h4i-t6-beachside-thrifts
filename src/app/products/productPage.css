@@ -104,6 +104,11 @@
   line-height: 1.1;
   animation: fadeInUp 0.75s ease-out 0.2s both;
 }
+.title-image {
+  max-height: calc(clamp(2rem, 4vw, 3rem) + 3rem);
+  height: auto;
+  display: block;
+}
 
 .products-page-subtitle {
   margin: 0.5rem 0 0;

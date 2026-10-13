@@ -142,7 +142,6 @@ body {
 }
 
 .about-story-image-frame--first {
-  transform: translateX(max(-120px, -20vw));
   animation: about-story-1 0.7s ease-out both;
   animation-delay: 0.8s;
 }
@@ -190,7 +189,14 @@ body {
 }
 
 @keyframes about-story-1 {
+  from {
+    transform: translateX(max(-120px, -20vw)) translateX(-100vw);
+  }
+  50% {
+    transform: translateX(max(-120px, -20vw)) translateX(0);
+  }
   to {
+    transform: translateX(max(-120px, -20vw)) translateX(0);
     opacity: 1;
   }
 }
