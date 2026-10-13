@@ -33,6 +33,17 @@ export async function POST(request: Request) {
     const { name, description, price, category, imageUrl, inStock } = body as Record<string, unknown>;
 
     if (
+      name === undefined ||
+      description === undefined ||
+      price === undefined ||
+      category === undefined ||
+      imageUrl === undefined ||
+      inStock === undefined
+    ) {
+      return NextResponse.json({ error: "Missing required product fields" }, { status: 400 });
+    }
+
+    if (
       typeof name !== "string" ||
       !name.trim() ||
       name.trim().length > 100 ||

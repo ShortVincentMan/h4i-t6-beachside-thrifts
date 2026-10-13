@@ -1,35 +1,65 @@
-# Hack4Impact Team 6 Bootcamp 2026
-
-Design a business website to understand basic software development team dynamics.
-
-## Table of Contents
-
-- [Overview](#overview)
-  - [Purpose](#purpose)
-  - [Team](#team)
-- [Getting Started And Contributing](#getting-started-and-contributing)
+# Beachside Thrift
 
 ## Overview
 
-### Purpose
+Beachside Thrift is an online thrift store where users can list secondhand products up for sale and browse items from other users.
 
-{Short paragraph description of the non-profit mission and the purpose of this project. Who will this project help, why is it necessary. Impact of the project.}
+## Live Site
 
-### Team
+Visit the website: [Beachside Thrift](https://h4i-team6-bootcamp-2026.vercel.app/)
 
-The {non-profit name} team consists of {#} Cal Poly students. Over the course of about 9 months, we worked as a team to deploy this web application. The team members are listed below:
+## Team
 
-- [First Last](https://www.linkedin.com/) - Project Manager
-- [First Last](https://www.linkedin.com/) - Designer
-- [Vincent Le](https://www.linkedin.com/) - Tech Lead
-- [First Last](https://www.linkedin.com/) - Tech Lead
-- [First Last](https://www.linkedin.com/) - Software Developer
-- [First Last](https://www.linkedin.com/) - Software Developer
-- [First Last](https://www.linkedin.com/) - Software Developer
-- [First Last](https://www.linkedin.com/) - Software Developer
+- Vincent Le - Tech Lead
+- Aanya Chauhan- Software Developer
+- Dane Stilinovich - Software Developer
+- Destiny Lee - Software Developer
+- Isaac Hey - Software Developer
+- Joanna Li - Software Developer
 
-## Getting Started And Contributing
+## Tech Stack
 
-Visit [getting-started.md](docs/getting-started.md) on info for how to set up this repo.
+- Next.js
+- React
+- TypeScript
+- MongoDB Atlas
+- Mongoose
+- Vitest
 
-Visit [contributing.md](docs/contributing.md) on info for how to contribute to this repo.
+## Getting Started
+
+### Prerequisites
+
+- Node.js and npm
+- A MongoDB Atlas connection string from our Tech Lead (Vincent)
+
+### Installation
+
+1. Clone the repository: git clone https://github.com/ShortVincentMan/h4i-team6-bootcamp-2026.git
+2. Move into the project folder: cd h4i-team6-bootcamp-2026
+3. Install dependencies: 'npm install'
+
+### Environment Variables
+
+Create a '.env.local' file in the project root and add your mongoDb atlas connection string:
+
+'MONGO_URI=<your-mongodb-connection-string>'
+
+Ask the Tech Lead (Vincent) for the development database credentials. Never commit '.env.local' or real credentials to GitHub
+
+### Run the App
+
+Start the development server:
+
+'npm run dev'
+
+Then open http://localhost:3000 in your browser.
+
+## Available Commands
+
+- 'npm run dev' - starts the development server.
+- 'npm run build' - creates a production build.
+- 'npm run lint' - checks the code for linting issues.
+- 'npm test' - runs the test suite once.
+- 'npm run test:watch' - runs tests in watch mode,
+- 'npm run seed:products' - seeds the MongoDB database with product data.
