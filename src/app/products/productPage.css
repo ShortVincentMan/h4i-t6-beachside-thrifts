@@ -13,50 +13,6 @@
   animation: fadeInUp 0.7s ease-out both;
 }
 
-.products-page-wave {
-  position: fixed;
-  z-index: 5;
-  right: 0;
-  bottom: -1px;
-  left: 0;
-  height: 6rem;
-  overflow: hidden;
-  pointer-events: none;
-  animation: waveRise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-.products-page-wave-layer {
-  position: absolute;
-  bottom: 0;
-  width: 200%;
-  height: 100%;
-  animation: waveDrift 12s linear infinite;
-}
-
-.products-page-wave-layer path {
-  fill: #7db4d4;
-}
-
-.products-page-wave-layer--back {
-  height: 85%;
-  opacity: 0.55;
-  animation-duration: 17s;
-  animation-direction: reverse;
-}
-
-.products-page-wave-layer--back path {
-  fill: #b7d9eb;
-}
-
-.products-page-wave-layer--front {
-  opacity: 0.7;
-  animation-duration: 12s;
-}
-
-.products-page-wave-layer--front path {
-  fill: #7db4d4;
-}
-
 .products-page-header {
   position: relative;
   z-index: 1;
@@ -147,6 +103,11 @@
   letter-spacing: 0.04em;
   line-height: 1.1;
   animation: fadeInUp 0.75s ease-out 0.2s both;
+}
+.title-image {
+  max-height: min(calc(clamp(2rem, 4vw, 3rem) + 3rem), 10vw);
+  height: auto;
+  display: block;
 }
 
 .products-page-subtitle {
@@ -367,26 +328,9 @@
   }
 }
 
-@keyframes waveRise {
-  from {
-    transform: translateY(100%);
-  }
-  to {
-    transform: translateY(0);
-  }
-}
-
-@keyframes waveDrift {
-  to {
-    transform: translateX(-50%);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .products-page-loading-card,
-  .products-page-loading-dots i,
-  .products-page-wave,
-  .products-page-wave-layer {
+  .products-page-loading-dots i {
     animation: none;
   }
 }

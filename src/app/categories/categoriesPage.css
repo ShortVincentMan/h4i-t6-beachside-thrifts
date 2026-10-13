@@ -39,6 +39,12 @@
   line-height: 1.1;
 }
 
+.title-image-categories {
+  max-height: min(calc(clamp(2rem, 4vw, 3rem) + 3.8rem), 10vw);
+  height: auto;
+  display: block;
+}
+
 .categories-page-subtitle {
   max-width: 38rem;
   margin: 0.5rem 0 0;
