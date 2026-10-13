@@ -1,5 +1,7 @@
 /* --- Modern Navbar Styles --- */
 .navbar {
+  position: relative;
+  z-index: 10;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -76,13 +78,138 @@ body {
   margin: 0 auto;
 }
 
-/* Typography */
 .page-title {
   color: #8cc0eb; /* Sky Blue */
   font-size: 2.5rem;
   font-weight: 800;
   text-align: center;
   margin-bottom: 1.5rem;
+}
+
+.home-page-title {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2968 / 1564;
+  margin: -100px 0;
+}
+
+.page-title-image {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+}
+
+.page-title-image--beachside {
+  z-index: 1;
+  animation: page-title-beachside-enter 0.8s ease-out both;
+}
+
+.page-title-image--thrift {
+  z-index: 0;
+  animation: page-title-thrift-enter 0.8s ease-out 0.15s both;
+}
+
+.page-title-image--about {
+  animation: page-title-about-enter 0.8s ease-out both;
+}
+
+.about-story-content {
+  display: grid;
+  grid-template-areas: "story";
+}
+
+.about-story-image-frame {
+  grid-area: story;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2968 / 1564;
+  opacity: 0;
+  margin-top: -50px;
+}
+
+.about-story-image-frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.about-story-image-frame--first {
+  transform: translateX(-120px);
+  animation: about-story-1 0.7s ease-out both;
+  animation-delay: 0.8s;
+}
+
+.about-story-image-frame--second {
+  animation: about-story-2 0.7s ease-out infinite;
+  animation-delay: 1.6s;
+}
+
+@keyframes page-title-beachside-enter {
+  0% {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes page-title-thrift-enter {
+  0% {
+    opacity: 0;
+    transform: translateY(12px) scale(0.9);
+  }
+  30% {
+    opacity: 0;
+    transform: translateY(12px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes page-title-about-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes about-story-1 {
+  to {
+    opacity: 1;
+  }
+}
+@keyframes about-story-2 {
+  0% {
+    opacity: 0;
+    transform: translate(-180px, 60px) scale(0.65) rotate(-8deg);
+  }
+  30% {
+    opacity: 1;
+    transform: translate(-12px, -6px) scale(1.05) rotate(4deg);
+  }
+  60% {
+    opacity: 1;
+    transform: translate(0) scale(1) rotate(0);
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 .page-subtitle {

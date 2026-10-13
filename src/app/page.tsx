@@ -1,5 +1,9 @@
 "use client";
 
+import Wave from "@/components/Wave";
+import Image from "next/image";
+import beachsideImage from "./assets/beachsideImg.png";
+import thriftImage from "./assets/THRIFTImg.png";
 import { useState, useEffect } from "react";
 
 export default function Home() {
@@ -27,11 +31,10 @@ export default function Home() {
 
   return (
     <main className="page-container">
-      <h1 className="page-title">Catch the Best Finds</h1>
-      <p className="page-subtitle">
-        Welcome to our thrift shop! Ride the wave of sustainable fashion and discover unique coastal treasures.
-      </p>
-
+      <h1 className="home-page-title" aria-label="Beachside Thrift">
+        <Image src={beachsideImage} alt="Beachside" className="page-title-image page-title-image--beachside" priority />
+        <Image src={thriftImage} alt="Thrift" className="page-title-image page-title-image--thrift" priority />
+      </h1>
       {/* Carousel Section */}
       <div className="carousel-container">
         <div className="carousel-track" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
@@ -44,6 +47,7 @@ export default function Home() {
           ))}
         </div>
       </div>
+      <Wave />
     </main>
   );
 }
