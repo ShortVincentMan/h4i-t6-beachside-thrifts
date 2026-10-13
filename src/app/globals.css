@@ -90,7 +90,7 @@ body {
   position: relative;
   width: 100%;
   aspect-ratio: 2968 / 1564;
-  margin: -100px 0;
+  margin-block: calc(-1 * clamp(1.5rem, 12.5vw, 6.25rem));
 }
 
 .page-title-image {
@@ -131,7 +131,7 @@ body {
   width: 100%;
   aspect-ratio: 2968 / 1564;
   opacity: 0;
-  margin-top: -50px;
+  translate: 0 clamp(-3.125rem, -6.25vw, -1rem);
 }
 
 .about-story-image-frame img {
@@ -142,7 +142,7 @@ body {
 }
 
 .about-story-image-frame--first {
-  transform: translateX(-120px);
+  transform: translateX(max(-120px, -20vw));
   animation: about-story-1 0.7s ease-out both;
   animation-delay: 0.8s;
 }
