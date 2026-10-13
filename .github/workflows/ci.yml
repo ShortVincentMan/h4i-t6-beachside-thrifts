@@ -3,10 +3,10 @@ name: ci
 # Controls when the workflow will run
 on:
   push:
-    branches: ["main", "develop"]
+    branches: [main, develop]
 
   pull_request:
-    branches: ["main", "develop"]
+    branches: [main, develop]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -21,7 +21,7 @@ jobs:
     # Use matrix strategy to test multiple Node.js versions
     strategy:
       matrix:
-        node-version: [18.x, 20.x, 22.x]
+        node-version: [22.x, 24.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     # Steps represent a sequence of tasks that will be executed as part of the job
