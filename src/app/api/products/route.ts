@@ -15,24 +15,6 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-<<<<<<< HEAD
-  try {
-    await connectDB();
-    const body = await request.json();
-
-    const { name, description, price, category, imageUrl, inStock } = body;
-
-    if (!name || !description || price === undefined || !category || !imageUrl || inStock === undefined) {
-      return NextResponse.json({ error: "Missing required product fields" }, { status: 400 });
-    }
-
-    const newProduct = await Product.create({
-      name,
-      description,
-      price,
-      category,
-      imageUrl,
-=======
   let body: unknown;
 
   try {
@@ -75,7 +57,6 @@ export async function POST(request: Request) {
       price,
       category: category.trim(),
       imageUrl: imageUrl.trim(),
->>>>>>> d7ff8f2ae99d23ec9cb7f8abaef4423994071978
       inStock,
     });
 
@@ -83,8 +64,6 @@ export async function POST(request: Request) {
   } catch (error) {
     return NextResponse.json({ error: "Failed to create product" }, { status: 500 });
   }
-<<<<<<< HEAD
-=======
 }
 
 function isHttpUrl(value: string) {
@@ -94,5 +73,4 @@ function isHttpUrl(value: string) {
   } catch {
     return false;
   }
->>>>>>> d7ff8f2ae99d23ec9cb7f8abaef4423994071978
 }
