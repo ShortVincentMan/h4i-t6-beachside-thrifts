@@ -40,7 +40,7 @@
 }
 
 .title-image-categories {
-  max-height: calc(clamp(2rem, 4vw, 3rem) + 3.8rem);
+  max-height: min(calc(clamp(2rem, 4vw, 3rem) + 3.8rem), 10vw);
   height: auto;
   display: block;
 }

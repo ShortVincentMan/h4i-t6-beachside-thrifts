@@ -105,7 +105,7 @@
   animation: fadeInUp 0.75s ease-out 0.2s both;
 }
 .title-image {
-  max-height: calc(clamp(2rem, 4vw, 3rem) + 3rem);
+  max-height: min(calc(clamp(2rem, 4vw, 3rem) + 3rem), 10vw);
   height: auto;
   display: block;
 }
